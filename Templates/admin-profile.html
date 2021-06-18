@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div style="margin-top:20px;" class="container"><p style="font-size:3.4vh;margin-bottom:-50px;margin-top:100px;">Ad Requests</p></div>
+  <div class="container" >
+    <ul class="row" style="padding:0px;">
+    {% for item in AD %}
+    {% if item.is_rejected == False %}
+    <li id="{{item.id}}">
+    <div class="column">
+    <div class="card border-dark mb-3" style="max-width: 18rem;">
+    <div class="card-body ">
+        <a class="image_container" href="{% url "products:admin-details" id=item.id %}">
+        <img src="{{item.image.url}}" alt="">
+       </a>
+       <p>{{item.title}}</p>
+      </div>      
+      <div class="card-footer bg-transparent border-dark">
+      <div class="recent-ad-footer">
+      <div class="recent-ad-price">
+        <p><strong><span>
+          {{item.price}}
+        </span></strong></p>
+      </div>
+      <span>
+      <input type="button" id="approved" onclick="clicked({{item.id}})" class="btn btn-dark btn-sm" value="Approve">
+      <input type="button" id="rejected"onclick="rejectedclicked({{item.id}})" class="btn btn-danger btn-sm" value="Dismiss">
+      </span>
+      <div class="recent-ad-date-posted">
+        <p><strong><span>
+          {{item.date_created.day}}/{{item.date_created.month}}
+        </span></strong></p>
+      </div>
+      </div>
+      </div>
+      </li>
+      {%endif%}
+      {% endfor %}
+      </ul>
+  </div>
+{% endblock %}
+{% block footer %}
+    <script>
+    function clicked(id){
+          $(document.getElementById(`${id}`)).hide()
+      data = JSON.stringify({
+                is_approved:'True'
+            })
+            console.log(data)
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            let csrftoken = getCookie('csrftoken');
+            let response = fetch(`/home/approved/${id}`, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    "X-CSRFToken": csrftoken },
+            });
+      };
+    function rejectedclicked(id){
+          $(document.getElementById(`${id}`)).hide()
+      data = JSON.stringify({
+                is_rejected:'True'
+            })
+            console.log(data)
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            let csrftoken = getCookie('csrftoken');
+            let response = fetch(`/home/rejected/${id}`, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    "X-CSRFToken": csrftoken },
+            });
+      };
+  </script>
+{% endblock footer %}

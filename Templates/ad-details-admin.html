@@ -1,0 +1,108 @@
+{%extends "base.html"%}
+{% load static %}
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static "ad-details.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "slick/slick.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "slick/slick-theme.css" %}">  </head>
+<body>
+{%block content%}
+<div class="container" style="margin-top:80px;" >
+<br>
+<a href="{% url 'products:admin-view' %}">
+	<button class="btn btn-danger btn-lg" style="margin-bottom:-80px;;">GO BACK</button>
+<a>
+</div>
+<div class="container">
+		<div class="card">
+			<div class="container-fliud">
+				<div class="wrapper row">
+					<div class="preview col-md-4">
+						<div class="preview-pic tab-content">
+						  <div class="tab-pane active" id="pic-1"><img src="{{AD.image.url}}" /></div>
+						</div>
+					</div>
+					<div class="details col-md-6">
+						</br>
+						</br>
+                        <h3 class="product-title">{{AD.title}}</h3>
+
+						<p class="product-description">{{AD.description}}</p>
+						<p>{{AD.location}}</p>
+						<p>{{AD.category}}</p>
+                        <h4 class="price">current price: <span>0.002BTC</span></h4>
+						<span>
+      <input type="button" class="btn btn-dark btn-sm" value="Approve">
+      <input type="button" class="btn btn-danger btn-sm" value="Dismiss">
+      </span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{%endblock%}
+{% block footer %}
+   <script>
+    function clicked(id){
+      data = JSON.stringify({
+                is_approved:'True'
+            })
+            console.log(data)
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            let csrftoken = getCookie('csrftoken');
+            let response = fetch(`/home/approved/${id}`, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    "X-CSRFToken": csrftoken },
+            });
+      };
+    function rejectedclicked(id){
+          document.getElementById(`${id}`)
+      data = JSON.stringify({
+                is_rejected:'True'
+            })
+            console.log(data)
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            let csrftoken = getCookie('csrftoken');
+            let response = fetch(`/home/rejected/${id}`, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    "X-CSRFToken": csrftoken },
+            });
+      };
+  </script>
+{% endblock footer %}

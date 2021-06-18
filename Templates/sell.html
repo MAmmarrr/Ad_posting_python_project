@@ -1,0 +1,186 @@
+{% load static %}
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static "sell.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "slick/slick.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "slick/slick-theme.css" %}">
+
+  </head>
+<body>
+<div class="row nav">
+
+<div class="column">
+
+<div class="back">
+  <a href={% url "products:home" %}><span style='font-size:40px;text-decoration:none;color:black;margin-left:40px'><strong>&#8678;</strong></span></a>
+</div>
+</div>
+
+<div class="column">
+<div>
+ <a href={% url "products:home" %}>
+  <span><p style="font-size:3.4vh;margin-top:10px;"><i><span style="color:black" ><strong>PazarKri</strong></a></i><p></span>
+  </a>
+</div>
+</div>
+
+<div class="column">
+<div>
+{% if user.is_authenticated %}
+  <a  href="{% url 'logout' %}" >
+  <span><p style="font-size:2.4vh;margin-top:20px;margin-left:2000%"><span style="color:black"><strong>Log<span style="color:faaa3f">o</span>ut</strong></a><p></span>
+  </a>
+{% endif %}
+</div>
+</div>
+
+</div>
+
+
+</div>
+
+<h3 style="text-align:center;margin-top:20px">POST YOUR AD</h3>
+<div style="font-size:1.7vh;margin-top:30px;" class="container">
+<span ><strong>CHOOSE A CATEGORY</strong></span>
+<button type="button" id="Mobile"data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" class="btn btn-outline-dark btn-block"><i class="fa fa-mobile-phone" style="font-size:36px;"></i>
+Mobile</button>
+<button type="button" id="Vehicle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" class="btn btn-outline-dark btn-block"><i class="fa fa-mobile-phone" style="font-size:36px;"></i>
+Vehicle</button>
+<button type="button" id="Property" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" class="btn btn-outline-dark btn-block"><i class="fa fa-mobile-phone" style="font-size:36px;"></i>Property</button>
+<button type="button" id="Bikes" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" class="btn btn-outline-dark btn-block"><i class="fa fa-mobile-phone" style="font-size:36px;"></i>Bikes</button>
+<button type="button"  id="Furniture" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" class="btn btn-outline-dark btn-block"><i class="fa fa-mobile-phone" style="font-size:36px;"></i>Furnitures</button>
+<button type="button" id="Services" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" class="btn btn-outline-dark btn-block"><i class="fa fa-mobile-phone" style="font-size:36px;"></i>Services</button>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="margin-left:35%;"id="exampleModalLabel">
+        <span class="cr">
+        CR
+        </span>
+        <span class='ea'>
+        EA
+        </span>
+        <span class='te'>
+        TE
+        </span>
+        <span class='ad'>
+        AD
+        </span>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="my-form" action="{% url "products:save_item" %}" enctype="multipart/form-data">{% csrf_token %}
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label"><strong>Category:</strong></label>
+            <input type="text" class="form-control" autocomplete="off"   id="category" name="category"  required/>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label"><strong>Title:</strong></label>
+            <input type="text" class="form-control" autocomplete="off" name="title"  required/>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" id="image-l"class="col-form-label"><strong>Image:</strong></label>
+            <input type="file" class="form-control" name='image' required/>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label"><strong>Description:</strong></label>
+            <textarea class="form-control" autocomplete="off" name='description'id="description" required/></textarea>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label"><strong>Price:<strong></label>
+            <input type="number" autocomplete='off' placeholder="$"name='price' class="form-control" id="price" required/></input>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label"><strong>State:</strong></label>
+            <input type="text" autocomplete='off' class="form-control" name='state'id="state" requried/></input>
+          </div>
+        <button id = "cancel" type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+        <button id="submit" type="submit" class="btn btn-dark" >Post Ad</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="SuccessModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><span >Your request has been submitted for review.</span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        </div>
+      </div>
+      </div>
+  </div>
+</div>
+<script>
+categories = ["Mobile", "Vehicle", "Property", "Bikes", "Furnitures", "Services"];
+cat = ""
+$(document).ready(function(){
+  $("button").click(function(){
+    cat = this.id
+    if(categories.includes(cat)){
+    $("#category").val(cat);
+    console.log($("input[name='category']").val())
+    }
+  });
+    $("button").click(function(){
+    if(this.id=="submit"){
+      data = JSON.stringify({
+        
+                price:$('#price').val(),
+                title: $('#title').val(),
+                description: $("#description").val(),
+                category: cat,
+                location: $("#state").val(),
+            })
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            let csrftoken = getCookie('csrftoken');
+            let response = fetch("/home/save_item/", {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    "X-CSRFToken": csrftoken },
+            });
+    }
+        
+  })
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,203 @@
+{% load static %}
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static "base.css" %}">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% block header %}
+{% endblock header%}
+</head>
+<body>
+<div class='nav fixed-top'>
+<a href={% url "products:home"%}>
+<div class="flex-nav">
+  <span><p style="font-size:3.4vh;"><i><strong><span style="color:black;">PazarKri<span></strong></i><p></span>
+</div>
+</a>
+<div class="flex-nav cat-search">
+  <form method="POST" action="{% url "products:home" %}">{% csrf_token %}
+  <div class="input-group mb-3">
+   <input type="hidden" id="custId" name="keywordhidden" value={{keyword}}>
+  <input  type="text" class="form-control" style="margin-top:10px;" name='city' autocomplete="off"  placeholder="Search city, or area .." aria-label="" aria-describedby="basic-addon1">
+<div class="input-group-append">
+<button class="btn btn-outline-secondary btn-lg" style="margin-top:10px;" type="submit"><span class="fa fa-search"></span></button>
+  </div>
+  </div>
+  </form>
+</div>
+<div class="flex-nav item-search">
+  <form method="POST" action="{% url "products:home_keyword" %}">{% csrf_token %}
+  <div class="input-group mb-3">
+   <input type="hidden" id="custId" name="cityhidden" value={{city}}>
+  <input  type="text" class="form-control" style="margin-top:10px;"id="keyword" name="keyword"autocomplete="off" placeholder="Find Cars, Mobile Phones and more.." aria-label="" aria-describedby="basic-addon1">
+<div class="input-group-append">
+    <button id="by-title" onclick="clickedSearch()"style="margin-top:10px;" class="btn btn-outline-secondary btn-lg" type="submit"><span class="fa fa-search"></span></button></>
+  </div>
+  </div>
+  </form>
+
+</div>
+  <div class="inside flex-nav" style="margin-top:-10px;">
+<div class="flex-B">
+ <button id="sell" type="button" class="btn btn-lg btn-ext btn-log" data-toggle="modal" data-target="#BTCModalCenter">
+  <div class="gift">
+  <i style="font-size:32px;" class="fa fa-gift"></i>
+
+  <span class"log-g">G</span><span class="log-i">I</span><span class="log-f">F</span><span class="log-t">T</span>
+  </div>
+  </button>
+</div>
+  <div class="flex-B">
+  {% if user.is_authenticated %}
+<button id="sell" type="button" style="cursor:pointer;" class="btn btn-lg btn-ext btn-log" data-toggle="modal" data-target="#BTCModalCenter">
+    <span>
+    <div class="gift">
+    {% if user.is_superuser %}
+    <a style='cursor:pointer;color:black' href="{% url "products:admin-view" %}">Admin
+    <i class="fa fa-home" style="margin-left:0px;margin-right:40px;padding:0px;width:10px;font-size:32px;"></i>
+    </a>
+    {%  endif %}
+    Welcome {{user.username}}!
+  </div>
+  </span>
+</button>
+{% endif %}
+
+
+  </div>
+  {% if user.is_authenticated %}
+  <div class="flex-B">
+  <button id="sell" type="button" class="btn btn-lg btn-ext btn-log">
+  <span class="main-log">
+  <a  sstyle="color:black;"href="{% url 'logout' %}" >
+  <span class"log-l">L</span><span class="log-o">o</span><span class="log-g">g</span><span class="log-i">o</span><span class="log-n">u</span><span class"log-l">t</span>
+  </a>
+  </span>
+  </button>
+  </div>
+  {% else %}
+  <div class="flex-B">
+  <button  id= "sell"type="button" class="btn btn-lg btn-ext btn-log" data-toggle="modal" data-target="#exampleModalCenter">
+  <span class="main-log">
+  <span class"log-l">L</span><span class="log-o">o</span><span class="log-g">g</span><span class="log-i">i</span><span class="log-n">n</span>
+  </span>
+  </button>
+  </div>
+{% endif %}
+{% if user.is_authenticated%}
+  <div class="flex-B">
+  <button id="sell" type="button" class="btn btn-ext btn-lg" >
+    <a href="{% url 'products:sell' %}">
+    <span class="S">S</span><span class="e">E</span><span class="l">L</span><span id='l'>L</span>
+    </a>
+  </button>
+  </div>
+  {% else %}
+  <div class="flex-B">
+  <button id="sell" type="button" class="btn btn-ext btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+    <span class="S">S</span><span class="e">E</span><span class="l">L</span><span id='l'>L</span>
+  </button>
+  </div>
+  {% endif %}
+  </div>
+</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:Black;"><span ><strong>Save All your favourite Items in One Place</strong></span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="Button-container">
+      <div class="flex-Item flex-Item1">
+        <Button class="b-Facebook">
+        <a href="{% url "social:begin" 'facebook' %}" style="color:white">
+          <span class="fa fa-facebook">
+           Continue with Facebook
+          </span>
+          </a>
+        </Button>
+      </div>
+      <div class="flex-Item flex-Item2">
+        <Button class="b-Gmail">
+          <span class="fa fa-google">
+         Continue with Google
+          </span>
+        </Button>
+      </div>
+      <div class="flex-Item flex-Item3">
+        <Button class="b-Email" data-toggle="modal" data-dismiss='modal'data-target="#ModalCenter">
+          <span>
+          Continue with Email
+          </span>
+        </Button>
+        </div>
+        </div>
+      <div class="flex-Item flex-Item3" style="margin-bottom:0px;">
+        <p>
+          <span>
+          If you continue you are accepting <strong><i>Pazarki's</i> Terms and conditions</strong>
+          </span>
+        </p>
+        </div>
+        </div>
+      </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <button type="button" style="margin-left:0px;"  data-toggle="modal" class="close" data-dismiss="modal" data-target="#exampleModalCenter" aria-label="Close">
+          <span aria-hidden="true" ><strong>&#60;</strong></span>
+        </button>
+        <h5 style="margin-left:50px;"class="modal-title" id="exampleModalLongTitle">Enter Email and Mobile Number</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="flex-form">
+      <div class="flex-Item-f">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Email </span>
+        </div>
+        <input type="text" class="form-control" placeholder="Email" aria-label="Username" aria-describedby="basic-addon1">
+      </div>
+      </div>
+      <div class="flex-Item-f">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Phone</span>
+        </div>
+        <input type="text" class="form-control" placeholder="Phone Number" aria-label="Username" aria-describedby="basic-addon1">
+      </div>
+      <div class="flex-Item-f">
+      <Button class="btn btn-large btn-danger center">JOIN</Button>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+  </div>
+</div>
+
+{% block content %}
+{% endblock content %}
+{% block footer %}
+
+{% endblock footer %}
+</body>
+</html>

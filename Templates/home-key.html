@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{%load static%}
+
+{%block header%}
+<link rel="stylesheet" type="text/css" href="{% static "slick/slick.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "slick/slick-theme.css" %}">
+<link rel="stylesheet" href="{% static "base.css" %}">
+    <script src="https://use.fontawesome.com/your-embed-code.js"></script>
+
+{%endblock header%}
+
+  {% block content %}
+<div class="container">
+</div>
+<ul>
+  <p style="font-size:3.4vh;margin-left:200px;position:relative;">Recently added</p>
+  <div class="autoplay container recent-ads row">
+  {% for item in  RECENT%}
+  <li>
+    <div class='recent-ad-item column'>
+      <div class="card border-dark mb-3" style="max-width: 18rem;">
+        <div class="card-body ">
+          <a class="image_container" href="{% url 'products:ad-details' id=item.id %}">
+          <img src="{{item.image.url}}" alt="">
+        </a>
+        <p><strong>{{item.title}}</strong></p>
+          {{item.location}}
+        </div>
+        <div class="card-footer bg-transparent border-dark">
+        <div class="recent-ad-footer">
+          <p><strong><span>
+            {{item.price}}$
+          </span></strong>
+          </p>
+          <p><strong><span>
+            {{item.date_created.day}}/{{item.date_created.month}} at {{item.date_created.time}}
+          </span></strong></p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+  </div>
+</ul>
+ <div class="paginator container d-flex justify-content-center">
+ {% if AD.has_previous %}
+  <a class="pagination-action" href="?page=1"><b><<</b></a>
+  <a class="pagination-action" href="?page={{AD.previous_page_number}}"><</a>
+ {% endif %}
+        {% for num in AD.paginator.page_range %}
+        {% if AD.number == num %}
+        <strong>{{num}}</strong>
+        {% elif num > AD.number|add:'-2' and num < AD.number|add:'2' %}
+          {{num}}
+        {% endif %}
+        {% endfor %}
+ {% if AD.has_next %}
+  <a class="pagination-action" href="?page={{AD.next_page_number}}">></a>
+  <a class="pagination-action"  href="?page={{AD.paginator.num_pages}}"><b> >> </b></a>
+ {% endif %}
+</div>
+<div style="margin-top:20px;" class="container"><p style="font-size:3.4vh;margin-bottom:-50px;margin-top:10px;">Fresh recomendations</p></div>
+  <div class="container" >
+    <ul class="row" style="padding-left:120px;">
+  {% for item in  AD%}
+    <li>
+    <div class="column">
+    <div  class="card border-dark bd mb-3" style="max-width: 18rem;">
+    <div class="card-body ">
+        <a class="image_container" href="{% url "products:ad-details" item.id %}">
+        <img src="{{item.image.url}}" alt="">
+       </a>
+       {{item.title}}
+        <br>{{ item.location}}
+      </div>      
+      <div class="card-footer bg-transparent border-dark">
+      <div class="recent-ad-footer">
+        <p><strong><span>
+          ${{ item.price}}
+        </span></strong></p>
+        <p><span><strong>
+          {{item.date_created.day}}/{{item.date_created.month}}</strong> at <strong>{{item.date_created.time}}</strong>
+        </span></p>
+      </div>
+      </div>
+      </li>
+      {% endfor %}
+      </ul>
+  </div>
+  {% endblock content %}
+  {% block footer %}
+  
+<script type="text/javascript" src="{% static "slick/slick.min.js"%}" ></script>
+<script>
+$('.autoplay').slick({
+  slidesToShow: 5,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 2000,
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{% endblock footer %}
